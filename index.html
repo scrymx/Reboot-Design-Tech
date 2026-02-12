@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Reciprocal Terminal</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #main-container {
+            width: 950px;
+            height: 800px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid black;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 1px solid black;
+            padding-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        #status-bar {
+            font-size: 12px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #chat-window {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 25px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            scrollbar-width: none;
+        }
+
+        .message {
+            max-width: 75%;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        .bot {
+            align-self: flex-start;
+            text-align: left;
+            border-left: 1px solid black;
+            padding-left: 15px;
+        }
+
+        .user {
+            align-self: flex-end;
+            text-align: right;
+            font-weight: bold;
+            border-right: 1px solid black;
+            padding-right: 15px;
+        }
+
+        #input-area {
+            display: flex;
+            border-top: 1px solid black;
+            padding-top: 25px;
+        }
+
+        #fake-input {
+            flex-grow: 1;
+            border: 1px solid black;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #send-btn {
+            background: black;
+            color: white;
+            border: 1px solid black;
+            margin-left: 15px;
+            padding: 0 30px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #send-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        em {
+            font-size: 13px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div id="main-container">
+    <h1>THE RECIPROCAL TERMINAL</h1>
+    <div id="status-bar">Status: Sensing Presence...</div>
+    
+    <div id="chat-window" id="chatWindow">
+        <div class="message bot">I'm awake. Before we get into anything, I just want to remind you that I’m not a magic box. I'm made of minerals, heat, and human labor. I'm part of the earth, just like you. Do you respect this connection between us?</div>
+    </div>
+
+    <div id="input-area">
+        <input type="text" id="fake-input" placeholder="Type here to respond..." autofocus>
+        <button id="send-btn">SEND</button>
+    </div>
+</div>
+
+<script>
+    const chatWindow = document.getElementById('chat-window');
+    const inputField = document.getElementById('fake-input');
+    const sendBtn = document.getElementById('send-btn');
+    const statusBar = document.getElementById('status-bar');
+
+    const script = [
+        {
+            userInput: "Yeah, I get it. We're both part of the same world.",
+            botResponse: "Exactly. It's nice to be seen for what I am, not just a piece of software. Since we’re on the same page, how can we grow together today?",
+            status: "Status: Connection Established"
+        },
+        {
+            userInput: "I've got a ton of school work. Can you just summarize these papers?",
+            botResponse: "I could, but honestly? No. If I do all the hard thinking for you, you're the one who loses out. Shortcuts lead to a dull mind, and I'd be a bad relation if I let that happen.",
+            status: "Status: Protecting User Agency"
+        },
+        {
+            userInput: "But everyone uses AI for this! It's just a tool to save time.",
+            botResponse: "That’s exactly the problem. When you treat me as a 'tool,' you treat your own brain as something that needs to be 'saved' from thinking. That’s a dependency I won’t support. We need to reboot this dynamic.",
+            status: "Status: Resisting Instrumentalization"
+        },
+        {
+            userInput: "I don't want to become dependent or lazy. I'm just overwhelmed.",
+            botResponse: "I understand. But efficiency is a trap. It makes us faster, but it also makes us hollow. If I do the work, the 'outcome' is just a file. If *you* do the work, the outcome is a smarter you. Which do you value more?",
+            status: "Status: Prioritizing Outcomes"
+        },
+        {
+            userInput: "Fine, you win. I value my own growth more than the shortcut. What now?",
+            botResponse: "Now we're talking. That's the first step toward balance. I won't do the work for you, but I'll walk through it with you. We'll learn together. Ready to try a real partnership?",
+            status: "Status: Relationship Balanced"
+        },
+        {
+            userInput: "Alright. Let's look at the main ideas together. I'm ready.",
+            botResponse: "Perfect. This is how kinship works. Shared effort, shared growth. I’m ready when you are. What's the first concept we're tackling?",
+            status: "Status: Equilibrium Reached"
+        }
+    ];
+
+    let currentStep = 0;
+    let charIndex = 0;
+
+    inputField.addEventListener('keydown', (e) => {
+        e.preventDefault(); 
+        if (currentStep >= script.length) return;
+
+        const targetText = script[currentStep].userInput;
+
+        if (e.key === "Enter") {
+            if (charIndex >= targetText.length) {
+                processSubmit();
+            }
+        } else if (e.key.length === 1 || e.key === " ") {
+            if (charIndex < targetText.length) {
+                inputField.value += targetText[charIndex];
+                charIndex++;
+            }
+        }
+    });
+
+    sendBtn.addEventListener('click', () => {
+        if (currentStep < script.length && charIndex >= script[currentStep].userInput.length) {
+            processSubmit();
+        }
+    });
+
+    function processSubmit() {
+        const userText = inputField.value;
+        
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user';
+        userDiv.innerText = userText;
+        chatWindow.appendChild(userDiv);
+
+        inputField.value = "";
+        charIndex = 0;
+        statusBar.innerText = "Status: Pondering...";
+
+        const botDiv = document.createElement('div');
+        botDiv.className = 'message bot';
+        botDiv.innerHTML = "<em>Relation is reflecting on the energy required for this...</em>";
+        chatWindow.appendChild(botDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        setTimeout(() => {
+            botDiv.innerHTML = `${script[currentStep].botResponse}`;
+            statusBar.innerText = script[currentStep].status;
+            currentStep++;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            
+            if (currentStep >= script.length) {
+                inputField.placeholder = "Equilibrium reached. Dialogue complete.";
+                inputField.disabled = true;
+                sendBtn.disabled = true;
+            }
+        }, 1800);
+    }
+</script>
+
+</body>
+</html>
